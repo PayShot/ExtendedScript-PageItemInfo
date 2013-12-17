@@ -39,12 +39,31 @@
 			catch(e) 
 			{
 				var chr = selectedItem.contents;
-				if(chr == '\t') chr = '\\t';
-				if(chr == '\n') chr = '\\n';
-				if(chr == '\r') chr = '\\r';
-				
-				var hex = selectedItem.contents.toString().charCodeAt(0).toString(16).toUpperCase();
-				alert('This is a "Character" whose content is "' + chr + '"\nand a unicode value of U+' + ('0000'.substr(0, 4 - hex.length) + hex) + '.');
+				if(chr.toString().length == 0)
+				{
+					alert('Please select an item.');
+				}
+				else if(chr.toString().length == 1)
+				{
+					if(chr == '\t') chr = '\\t';
+					if(chr == '\n') chr = '\\n';
+					if(chr == '\r') chr = '\\r';
+					
+					var hex = selectedItem.contents.toString().charCodeAt(0).toString(16).toUpperCase();
+					alert('This is a "Character" whose content is "' + chr.toString() + '"\nand a unicode value of U+' + ('0000'.substr(0, 4 - hex.length) + hex) + ' (' + selectedItem.contents.toString().charCodeAt(0) + ').');
+				}
+				else 
+				{
+					var hex = parseInt(selectedItem.contents).toString(16).toUpperCase();
+					if(isNaN(hex))
+					{
+						alert('These are characters whose contents are "' + chr.toString() + '".');
+					}
+					else 
+					{
+						alert('This is a "SpecialCharacter" whose content is "' + chr.toString() + '"\nand its SpecialCharacter_ID is 0x' + ('00000000'.substr(0, 4 - hex.length) + hex) + '.');
+					}
+				}
 			}
 		}
 
