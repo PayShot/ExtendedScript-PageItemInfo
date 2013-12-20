@@ -1,8 +1,8 @@
 /* 
  * Description:		Retrieve the selected page item and select the item anchored to.
  * Author: 			Ramzi Komati
- * Version:			1.1
- * Last Modified:	December 17th, 2013
+ * Version:			1.1.3
+ * Last Modified:	December 20th, 2013
  */
 
 (function(obj) 
@@ -45,14 +45,27 @@
 				}
 				else if(chr.toString().length == 1)
 				{
-					if(chr == '\t') chr = '\\t';
-					if(chr == '\n') chr = '\\n';
-					if(chr == '\r') chr = '\\r';
-					
-					var hex = selectedItem.contents.toString().charCodeAt(0).toString(16).toUpperCase();
-					alert('This is a "Character" whose content is "' + chr.toString() + '"\nand a unicode value of U+' + ('0000'.substr(0, 4 - hex.length) + hex) + ' (' + selectedItem.contents.toString().charCodeAt(0) + ').');
+					if(chr == '\t') 
+					{
+						var x_unit = app.activeDocument.viewPreferences.horizontalMeasurementUnits.toString();
+						alert(
+							'This is a "TabStop Character" with the following properties:\n\n' +
+							'Alignment\t: ' 		  + selectedItem.tabStops[0].alignment.toString() + '\n'  +
+							'AlignmentCharacter\t: "' + selectedItem.tabStops[0].alignmentCharacter   + '"\n' +
+							'Leader\t\t: "'			  + selectedItem.tabStops[0].leader 			  + '"\n' +
+							'Position\t\t: '		  + Math.round(selectedItem.tabStops[0].position) +  ' '  + x_unit.substring(x_unit.indexOf('.'), x_unit.length)
+						);
+					}
+					else 
+					{
+						if(chr == '\n') chr = '\\n';
+						if(chr == '\r') chr = '\\r';
+						
+						var hex = selectedItem.contents.toString().charCodeAt(0).toString(16).toUpperCase();
+						alert('This is a "Character" whose content is "' + chr.toString() + '"\nand a unicode value of U+' + ('0000'.substr(0, 4 - hex.length) + hex) + ' (' + selectedItem.contents.toString().charCodeAt(0) + ').');
+					}
 				}
-				else 
+				else // chr.toString().length > 1
 				{
 					var hex = parseInt(selectedItem.contents).toString(16).toUpperCase();
 					if(isNaN(hex))
@@ -72,31 +85,8 @@
 		{
 			if(selectedItem.parent.contents.toString().charCodeAt(0) == 65532) 
 			{
-				if(selectedItem.parent.parent.textFrames.length != 0)
-				{
-					alert('Anchored to a "TextFrame #' + selectedItem.parent.parent.textFrames[0].id + '"');
-					app.activeDocument.pageItems.itemByID(selectedItem.parent.parent.textFrames[0].id).select();
-				}
-				else if(selectedItem.parent.parent.polygons.length != 0)
-				{
-					alert('Anchored to a "Polygon #' + selectedItem.parent.parent.polygons[0].id + '"');
-					app.activeDocument.pageItems.itemByID(selectedItem.parent.parent.polygons[0].id).select();
-				}
-				else if(selectedItem.parent.parent.rectangles.length != 0)
-				{
-					alert('Anchored to a "Rectangle #' + selectedItem.parent.parent.rectangles[0].id + '"');
-					app.activeDocument.pageItems.itemByID(selectedItem.parent.parent.rectangles[0].id).select();
-				}
-				else if(selectedItem.parent.parent.graphicLines.length != 0)
-				{
-					alert('Anchored to a "GraphicLine #' + selectedItem.parent.parent.graphicLines[0].id + '"');
-					app.activeDocument.pageItems.itemByID(selectedItem.parent.parent.graphicLines[0].id).select();
-				}
-				else if(selectedItem.parent.parent.groups.length != 0)
-				{
-					alert('Anchored to a "Group #' + selectedItem.parent.parent.groups[0].id + '"');
-					app.activeDocument.pageItems.itemByID(selectedItem.parent.parent.groups[0].id).select();
-				}
+				alert('Anchored to a "TextFrame #' + selectedItem.parent.parentTextFrames[0].id + '"');
+				app.activeDocument.pageItems.itemByID(selectedItem.parent.parentTextFrames[0].id).select();
 			}
 		}
 	}
